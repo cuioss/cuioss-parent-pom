@@ -11,7 +11,7 @@
     <description>Libraries that are used in the jakarta-ee-context but are agnostic to the actual version</description>
     <properties>
         <version.slf4j>2.0.17</version.slf4j>
-        <version.owasp.sanitizer>20260101.1</version.owasp.sanitizer>
+        <version.owasp.sanitizer>20260102.1</version.owasp.sanitizer>
         <version.prettytime>5.0.9.Final</version.prettytime>
         <version.jandex>3.5.3</version.jandex>
         <version.caffeine>3.2.1</version.caffeine>
