@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>cui-parent-pom</artifactId>
-        <version>1.3.7</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>cui-java-bom</artifactId>

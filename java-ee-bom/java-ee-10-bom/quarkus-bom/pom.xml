@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>java-ee-10-bom</artifactId>
-        <version>1.3.7</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
     <artifactId>quarkus-bom</artifactId>
     <packaging>pom</packaging>
