@@ -21,7 +21,7 @@
     <properties>
         <version.cui.core.ui.model>2.3.1</version.cui.core.ui.model>
         <version.cui.java.tools>2.6.1</version.cui.java.tools>
-        <version.cui.http>0.2.1</version.cui.http>
+        <version.cui.http>0.3.0</version.cui.http>
         <!-- Test -->
         <!-- The version needs to be aligned with the one defined within the quarkus boms.
         Otherwise, it's getting messy-->
