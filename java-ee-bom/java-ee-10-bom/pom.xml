@@ -46,7 +46,7 @@
         <version.microprofile.context-propagation.impl.smallrye>2.3.0</version.microprofile.context-propagation.impl.smallrye>
         <version.org.jboss.resteasy.client>7.0.0.Final</version.org.jboss.resteasy.client>
         <version.org.jboss.resteasy.microprofile>3.0.1.Final</version.org.jboss.resteasy.microprofile>
-        <version.jboss-logging>3.6.1.Final</version.jboss-logging>
+        <version.jboss-logging>3.6.2.Final</version.jboss-logging>
         <version.jakarta.annotation-api>2.1.0</version.jakarta.annotation-api>
     </properties>
     <dependencyManagement>
