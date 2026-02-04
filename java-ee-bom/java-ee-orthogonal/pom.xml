@@ -14,7 +14,7 @@
         <version.owasp.sanitizer>20260102.1</version.owasp.sanitizer>
         <version.prettytime>5.0.9.Final</version.prettytime>
         <version.jandex>3.5.3</version.jandex>
-        <version.caffeine>3.2.1</version.caffeine>
+        <version.caffeine>3.2.3</version.caffeine>
         <version.apache.httpcore>4.4.16</version.apache.httpcore>
         <version.log4j>2.25.3</version.log4j>
         <version.smallrye-jwt>4.6.3</version.smallrye-jwt>
