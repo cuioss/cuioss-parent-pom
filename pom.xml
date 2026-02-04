@@ -147,7 +147,7 @@
         <open.rewrite.maven.plugin.version>6.28.1</open.rewrite.maven.plugin.version>
         <rewrite-testing-frameworks.version>3.11.0</rewrite-testing-frameworks.version>
         <rewrite-migrate-java.version>3.26.0</rewrite-migrate-java.version>
-        <rewrite-static-analysis.version>2.16.0</rewrite-static-analysis.version>
+        <rewrite-static-analysis.version>2.26.0</rewrite-static-analysis.version>
         <project.build.outputTimestamp>2026-01-26T13:47:19Z</project.build.outputTimestamp>
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
 
