@@ -151,7 +151,7 @@
         <project.build.outputTimestamp>2026-01-26T13:47:19Z</project.build.outputTimestamp>
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
 
-        <cui-open-rewrite.version>1.1.2</cui-open-rewrite.version>
+        <cui-open-rewrite.version>1.2.0</cui-open-rewrite.version>
     </properties>
 
     <build>
