@@ -19,6 +19,10 @@ This profile applies all the recipes listed below and also manages license heade
     <recipe>org.openrewrite.java.format.AutoFormat</recipe>
     <recipe>org.openrewrite.java.format.NormalizeLineBreaks</recipe>
     <recipe>org.openrewrite.java.format.RemoveTrailingWhitespace</recipe>
+    <recipe>de.cuioss.rewrite.format.AnnotationNewlineFormat</recipe>
+    <recipe>de.cuioss.rewrite.logging.CuiLoggerStandardsRecipe</recipe>
+    <recipe>de.cuioss.rewrite.logging.CuiLogRecordPatternRecipe</recipe>
+    <recipe>de.cuioss.rewrite.logging.InvalidExceptionUsageRecipe</recipe>
     <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
     <recipe>org.openrewrite.java.migrate.RemoveSecurityManager</recipe>
     <recipe>org.openrewrite.java.migrate.util.JavaUtilAPIs</recipe>
@@ -29,5 +33,7 @@ This profile applies all the recipes listed below and also manages license heade
     <recipe>org.openrewrite.java.testing.junit5.RemoveTryCatchFailBlocks</recipe>
     <recipe>org.openrewrite.staticanalysis.EqualsAvoidsNull</recipe>
     <recipe>org.openrewrite.staticanalysis.NoPrimitiveWrappersForToStringOrCompareTo</recipe>
+    <recipe>org.openrewrite.staticanalysis.SimplifyBooleanExpression</recipe>
+    <recipe>org.openrewrite.staticanalysis.UnnecessaryParentheses</recipe>
 </activeRecipes>
 ----
