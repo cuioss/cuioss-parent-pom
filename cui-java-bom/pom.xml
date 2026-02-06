@@ -29,7 +29,7 @@
         <version.hamcrest>3.0</version.hamcrest>
         <version.cui.test.juli.logger>2.1.2</version.cui.test.juli.logger>
         <version.cui.test.generator>2.5.2</version.cui.test.generator>
-        <version.cui.test.value.objects>2.1.1</version.cui.test.value.objects>
+        <version.cui.test.value.objects>2.1.2</version.cui.test.value.objects>
         <version.cui.test.mockwebserver>1.4.0</version.cui.test.mockwebserver>
 
         <version.easymock>5.6.0</version.easymock>
