@@ -45,6 +45,8 @@
                         <doctitle>${project.name}</doctitle>
                         <!--https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#BEJEFABE -->
                         <doclint>${maven.javadoc.plugin.doclint}</doclint>
+                        <failOnError>${maven.javadoc.plugin.failOnError}</failOnError>
+                        <legacyMode>${maven.javadoc.plugin.legacyMode}</legacyMode>
                     </configuration>
                     <executions>
                         <execution>
@@ -341,6 +343,8 @@
                             <splitindex>true</splitindex>
                             <doctitle>${project.name}</doctitle>
                             <doclint>${maven.javadoc.plugin.doclint}</doclint>
+                            <failOnError>${maven.javadoc.plugin.failOnError}</failOnError>
+                            <legacyMode>${maven.javadoc.plugin.legacyMode}</legacyMode>
                         </configuration>
                         <executions>
                             <execution>
