@@ -17,7 +17,7 @@
         <version.myfaces>4.1.2</version.myfaces>
         <version.omnifaces>5.0</version.omnifaces>
         <version.primefaces>15.0.12</version.primefaces>
-        <version.cui.test.jsf.basic>4.1.1</version.cui.test.jsf.basic>
+        <version.cui.test.jsf.basic>4.1.2</version.cui.test.jsf.basic>
 
         <!-- Java EE-->
         <!-- Servlet / EE api -->
