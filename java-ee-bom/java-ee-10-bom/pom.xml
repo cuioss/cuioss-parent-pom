@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>java-ee-bom</artifactId>
-        <version>1.4.2</version>
+        <version>1.4-SNAPSHOT</version>
     </parent>
     <artifactId>java-ee-10-bom</artifactId>
     <packaging>pom</packaging>
