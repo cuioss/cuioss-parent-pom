@@ -95,6 +95,23 @@ The project recently changed license headers from javadoc style (`/** */`) to re
 ### CI/CD Integration
 
 - GitHub Actions workflows handle builds, tests, and deployments
-- Automatic SNAPSHOT deployments on master branch commits
+- Automatic SNAPSHOT deployments on main branch commits
 - Release workflow triggered by changes to project.yml
 - Security scanning via GitHub security features and scorecards
+
+## Git Workflow
+
+All cuioss repositories have branch protection on `main`. Direct pushes to `main` are never allowed. Always use this workflow:
+
+1. Create a feature branch: `git checkout -b <branch-name>`
+2. Commit changes: `git add <files> && git commit -m "<message>"`
+3. Push the branch: `git push -u origin <branch-name>`
+4. Create a PR: `gh pr create --repo cuioss/cuioss-parent-pom --head <branch-name> --base main --title "<title>" --body "<body>"`
+5. Wait for CI + Gemini review (waits until checks complete): `gh pr checks --watch`
+6. **Handle Gemini review comments** — fetch with `gh api repos/cuioss/cuioss-parent-pom/pulls/<pr-number>/comments` and for each:
+   - If clearly valid and fixable: fix it, commit, push, then reply explaining the fix and resolve the comment
+   - If disagree or out of scope: reply explaining why, then resolve the comment
+   - If uncertain (not 100% confident): **ask the user** before acting
+   - Every comment MUST get a reply (reason for fix or reason for not fixing) and MUST be resolved
+7. Do **NOT** enable auto-merge unless explicitly instructed. Wait for user approval.
+8. Return to main: `git checkout main && git pull`
