@@ -25,3 +25,15 @@ pages:
 github-automation:
   auto-merge-build-versions: true
   auto-merge-build-timeout: 300
+
+consumers:
+  - OAuthSheriff
+  - cui-portal-core
+  - cui-portal-ui
+  - cui-jsf-components
+  - cui-open-rewrite
+
+dependency-propagation:
+  group-id: de.cuioss
+  artifact-id: cui-java-parent
+  scope: parent
