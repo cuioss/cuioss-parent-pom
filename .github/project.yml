@@ -27,6 +27,16 @@ github-automation:
   auto-merge-build-timeout: 300
 
 consumers:
+  - cui-core-ui-model
+  - cui-http
+  - cui-java-module-template
+  - cui-java-tools
+  - cui-jsf-test-basic
+  - cui-test-generator
+  - cui-test-juli-logger
+  - cui-test-keycloak-integration
+  - cui-test-mockwebserver-junit5
+  - cui-test-value-objects
   - OAuthSheriff
   - cui-portal-core
   - cui-portal-ui
