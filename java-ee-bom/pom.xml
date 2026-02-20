@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>cui-parent-pom</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4.4</version>
     </parent>
     <artifactId>java-ee-bom</artifactId>
     <packaging>pom</packaging>
