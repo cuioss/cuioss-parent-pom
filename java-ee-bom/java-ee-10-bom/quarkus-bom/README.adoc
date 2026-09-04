@@ -1,34 +1,63 @@
 = quarkus-bom
 
-Bundles all Quarkus dependencies. This Bill of Materials (BOM) provides managed dependencies for Quarkus applications, including the Quarkus platform BOM and additional Quarkus-related libraries.
+Bundles the JSF-on-Quarkus extensions (MyFaces, OmniFaces, PrimeFaces). This Bill of
+Materials is imported *alongside*
+link:../../../cui-java-bom/cui-java-parent/cui-quarkus-parent/README.adoc[de.cuioss:cui-quarkus-parent],
+which supplies the Quarkus platform itself.
 
 This module is part of the link:../README.adoc[java-ee-10-bom] module.
 
+== Scope
+
+This BOM manages:
+
+* MyFaces Quarkus extension
+* Quarkus OmniFaces
+* Quarkus PrimeFaces
+
+It does *not* manage the Quarkus platform (`io.quarkus:quarkus-bom`) and it does *not*
+manage `quarkus-maven-plugin`. Both moved to `de.cuioss:cui-quarkus-parent`.
+
+The MicroProfile / smallrye-config alignment this module has always carried is unchanged: it
+comes from the `java-ee-10-bom` parent and is part of this module's effective
+`dependencyManagement`, so an importer keeps the pinned `smallrye-config` that Quarkus'
+config-mapping augmentation needs.
+
+=== Why the platform moved out
+
+`quarkus-maven-plugin` is a build extension, so its version has to be a real property at
+model-build time. Maven does not propagate properties out of an *imported* BOM, which is why
+this module's `<build><pluginManagement>` block — declaring exactly that plugin — was never
+reachable by a single consumer: `<scope>import</scope>` merges only `<dependencyManagement>`.
+The block was moved to `cui-quarkus-parent`, where inheritance makes it live.
+
+The platform version moved with it rather than being duplicated, because a *child-declared*
+import outranks an inherited one. Had this BOM kept its own `version.quarkus` and its own
+`io.quarkus:quarkus-bom` import, a consumer inheriting `cui-quarkus-parent` *and* importing
+this BOM would take its plugin version from the parent and its Quarkus artifacts from here —
+reproducing the exact plugin/BOM drift the parent exists to remove.
+
 == Usage
 
-To use this BOM in your project, add it to your dependencyManagement section:
+A JSF-on-Quarkus project inherits the Quarkus parent and imports this BOM:
 
 [source,xml]
 ----
+<parent>
+    <groupId>de.cuioss</groupId>
+    <artifactId>cui-quarkus-parent</artifactId>
+    <version>${version}</version>
+</parent>
+
 <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>de.cuioss</groupId>
             <artifactId>quarkus-bom</artifactId>
-            <version>${version}</version>
+            <version>${version.cui.parent}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
     </dependencies>
 </dependencyManagement>
 ----
-
-This BOM includes managed dependencies for:
-
-* Quarkus platform BOM (io.quarkus:quarkus-bom)
-* MyFaces Quarkus extension
-* Quarkus OmniFaces
-* Quarkus PrimeFaces
-
-It also manages the `quarkus-maven-plugin`.
-

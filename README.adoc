@@ -61,6 +61,35 @@ toc::[]
 </dependencyManagement>
 ----
 
+== Usage for Quarkus modules
+
+Quarkus projects inherit `cui-quarkus-parent` instead of `cui-java-parent`. It supplies
+`version.quarkus` as an *inherited* property, so `quarkus-maven-plugin` (a build extension,
+resolved before dependency management applies) and the Quarkus artifacts are driven by one
+value and cannot drift apart.
+
+[source,xml]
+----
+<parent>
+    <groupId>de.cuioss</groupId>
+    <artifactId>cui-quarkus-parent</artifactId>
+    <version>1.6.2</version> <!-- use the latest release -->
+</parent>
+
+<build>
+    <plugins>
+        <!-- no <version>, no <executions>: both come from the inherited pluginManagement -->
+        <plugin>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+----
+
+See link:cui-java-bom/cui-java-parent/cui-quarkus-parent/README.adoc[cui-quarkus-parent] for
+projects that carry competing BOM imports, and for the supported emergency-pin override.
+
 == Usage for Standard java-modules
 
 [source,xml]
