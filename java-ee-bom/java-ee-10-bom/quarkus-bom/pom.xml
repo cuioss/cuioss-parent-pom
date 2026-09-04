@@ -7,11 +7,43 @@
     </parent>
     <artifactId>quarkus-bom</artifactId>
     <packaging>pom</packaging>
-    <name>cuioss quarkus bom</name>
-    <description>Bundles all quarkus related dependencies / plugins</description>
+    <name>cuioss quarkus jsf extensions bom</name>
+    <description>Bundles the JSF-on-Quarkus extensions (MyFaces, OmniFaces, PrimeFaces).
+        Import ALONGSIDE de.cuioss:cui-quarkus-parent, which supplies the Quarkus platform itself.
+    </description>
+
+    <!-- ============================================================================
+         SCOPE CHANGE - this module no longer manages the Quarkus platform
+
+         It previously declared its own <version.quarkus>, imported io.quarkus:quarkus-bom
+         and carried a <build><pluginManagement> block for quarkus-maven-plugin. Those three
+         moved to de.cuioss:cui-quarkus-parent, and what remains here is only the JSF
+         extension delta.
+
+         The <build> block was moved rather than deleted because it was never reachable:
+         this module is consumed with <scope>import</scope>, which merges only
+         <dependencyManagement>. A <build> section in an imported POM is ignored entirely,
+         so the managed quarkus-maven-plugin never arrived anywhere - which is why
+         cui-reference-documentation, the one importer, still declared the plugin with an
+         explicit <version> of its own. Under a parent the same block is live.
+
+         The platform moved out rather than being duplicated because a CHILD-DECLARED import
+         outranks an inherited one. Had this module kept its own <version.quarkus> and its
+         own io.quarkus:quarkus-bom import, a consumer inheriting cui-quarkus-parent AND
+         importing this BOM would take its plugin version from the parent and its Quarkus
+         ARTIFACTS from here - reproducing exactly the plugin/BOM drift the parent exists to
+         remove, in the one project that already suffered it. Splitting platform from
+         extensions leaves a single source for the platform version.
+
+         Consumer contract: importing this BOM alone no longer manages io.quarkus artifacts.
+         JSF-on-Quarkus consumers inherit de.cuioss:cui-quarkus-parent for the platform and
+         import this for the extensions. The MicroProfile / smallrye-config alignment this
+         module has always carried is unaffected: it comes from the java-ee-10-bom PARENT and
+         is still part of this module's effective dependencyManagement, so an importer keeps
+         the pinned smallrye-config that Quarkus' config-mapping augmentation needs.
+         ============================================================================ -->
+
     <properties>
-        <!-- Quarkus -->
-        <version.quarkus>3.39.2</version.quarkus>
         <version.omnifaces.quarkus>5.5.1</version.omnifaces.quarkus>
         <version.primefaces.quarkus>4.15.17</version.primefaces.quarkus>
     </properties>
@@ -35,34 +67,6 @@
                 <version>${version.primefaces.quarkus}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${version.quarkus}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>io.quarkus</groupId>
-                    <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${version.quarkus}</version>
-                    <extensions>true</extensions>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>build</goal>
-                                <goal>generate-code</goal>
-                                <goal>generate-code-tests</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

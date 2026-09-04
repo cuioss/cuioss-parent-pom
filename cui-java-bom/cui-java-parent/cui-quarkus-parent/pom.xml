@@ -1,0 +1,114 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.cuioss</groupId>
+        <artifactId>cui-java-parent</artifactId>
+        <version>1.6-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>cui-quarkus-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>cui quarkus parent</name>
+    <description>Parent pom for Quarkus projects. Supplies the Quarkus platform version as an
+        INHERITED property, so quarkus-maven-plugin and the Quarkus artifacts cannot disagree.
+    </description>
+
+    <!-- ============================================================================
+         WHY THIS MODULE EXISTS: a parent, not a BOM
+
+         quarkus-maven-plugin is a BUILD EXTENSION (<extensions>true</extensions>). Maven
+         resolves build extensions while building the project model, before dependency
+         management is applied, so the plugin's version must be a real property at that
+         point - it cannot come from a managed dependency.
+
+         Maven does not propagate properties out of an IMPORTED BOM: <scope>import</scope>
+         merges only the target's <dependencyManagement>, nothing else. Every Quarkus
+         consumer therefore had to declare <version.quarkus> locally, which left two
+         independent inputs - the locally declared plugin version, and the BOM-supplied
+         artifact version - free to drift. cui-reference-documentation once ran plugin
+         3.38.0 against BOM-supplied 3.39.0; that is how the augmentation outage began.
+
+         Properties DO inherit through <parent>. Inheriting one <version.quarkus> makes the
+         plugin and the platform a single input, so the drift is not detected after the
+         fact, it cannot be expressed.
+
+         Verified on this repository's own artifacts rather than assumed - importing
+         de.cuioss:quarkus-bom:1.6.2 yields neither the property nor the plugin, while
+         inheriting the same POM yields both, and a child <version.quarkus> moves the
+         plugin and the managed artifacts together.
+         ============================================================================ -->
+
+    <properties>
+        <!-- The single input for the whole Quarkus platform: it drives BOTH the
+             quarkus-maven-plugin version below AND the io.quarkus:quarkus-bom import,
+             which is the entire point of this module.
+
+             A consumer MAY override this in its own <properties> for an emergency pin -
+             a child property beats an inherited one, and because both sides read the same
+             property they move together. That is a SUPPORTED use: it keeps the coupling to
+             the cuioss release cadence soft, so a consumer needing a Quarkus patch before
+             the next cui-parent-pom release is never blocked. Drop the override once the
+             platform version here has caught up. -->
+        <version.quarkus>3.39.2</version.quarkus>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- The Quarkus platform, at the same property the plugin uses.
+
+                 IMPORTANT for consumers with their own <dependencyManagement>: a
+                 CHILD-DECLARED import outranks an inherited one. If a consumer imports any
+                 other BOM that also manages Quarkus artifacts (or io.smallrye.config, which
+                 Quarkus' config-mapping augmentation is compiled against), that BOM will win
+                 over this inherited import regardless of the order written here.
+
+                 Such a consumer should keep importing io.quarkus:quarkus-bom in its own
+                 <dependencyManagement>, in the position its resolution requires, written as
+                 <version>${version.quarkus}</version>. That re-declaration is inert with
+                 respect to drift - it is the same coordinate resolved from this same
+                 inherited property - and it preserves an import order the consumer chose
+                 deliberately. Consumers without competing BOMs need declare nothing. -->
+            <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${version.quarkus}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Moved here from de.cuioss:quarkus-bom, where it was unreachable: that
+                     module is consumed with <scope>import</scope>, which merges only
+                     <dependencyManagement>, so its <build> section never reached a single
+                     consumer. Under a parent the block is live, and a Quarkus consumer
+                     declares the plugin with no <version> and no <executions>.
+
+                     pluginManagement is a template, not an activation: a module that does
+                     not list this plugin in its own <build><plugins> is unaffected, so
+                     non-Quarkus modules inheriting this parent do not gain a Quarkus build
+                     step. <extensions>true</extensions> likewise only takes effect where
+                     the plugin is actually declared. -->
+                <plugin>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-maven-plugin</artifactId>
+                    <version>${version.quarkus}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>build</goal>
+                                <goal>generate-code</goal>
+                                <goal>generate-code-tests</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

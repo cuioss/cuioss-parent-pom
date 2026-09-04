@@ -17,6 +17,12 @@ To use this parent POM in your project, add it to your pom.xml:
 
 This parent POM is part of the link:../README.adoc[cui-java-bom] module.
 
+== Modules
+
+* link:cui-quarkus-parent/README.adoc[cui-quarkus-parent] - Parent POM for Quarkus projects;
+  supplies the Quarkus platform version as an inherited property so `quarkus-maven-plugin`
+  and the Quarkus artifacts cannot drift apart
+
 == Profiles
 
 === release

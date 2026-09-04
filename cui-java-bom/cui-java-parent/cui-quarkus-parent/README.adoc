@@ -1,0 +1,110 @@
+= cui quarkus parent
+
+Parent POM for Quarkus projects. Supplies the Quarkus platform version as an *inherited
+property*, so `quarkus-maven-plugin` and the Quarkus artifacts cannot disagree.
+
+== Why a parent and not a BOM
+
+`quarkus-maven-plugin` is a build extension (`<extensions>true</extensions>`). Maven resolves
+build extensions while building the project model — before dependency management applies — so
+the plugin version has to be a real property at that point. It cannot come from a managed
+dependency.
+
+Maven does not propagate properties out of an *imported* BOM: `<scope>import</scope>` merges
+only `<dependencyManagement>`, nothing else. Every Quarkus consumer therefore had to declare
+`version.quarkus` locally, which left two independent inputs — the local plugin version and
+the BOM-supplied artifact version — free to drift apart. cui-reference-documentation once ran
+plugin `3.38.0` against BOM-supplied `3.39.0`; that is how the augmentation outage began.
+
+Properties *do* inherit through `<parent>`. Inheriting one `version.quarkus` makes the plugin
+and the platform a single input, so the drift is not detected after the fact — it cannot be
+expressed.
+
+== Usage
+
+[source,xml]
+----
+<parent>
+    <groupId>de.cuioss</groupId>
+    <artifactId>cui-quarkus-parent</artifactId>
+    <version>1.6.2</version> <!-- use the latest release -->
+</parent>
+----
+
+Declare the plugin with no `<version>` and no `<executions>` — both come from the inherited
+`pluginManagement`:
+
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+----
+
+Do *not* declare `<version.quarkus>` and do not import `io.quarkus:quarkus-bom` with a
+literal version. Both arrive from this parent.
+
+=== Consumers with their own dependencyManagement
+
+A *child-declared* import outranks an inherited one. If your project imports any other BOM
+that also manages Quarkus artifacts — or `io.smallrye.config`, which Quarkus' config-mapping
+augmentation is compiled against — that BOM wins over this parent's inherited import.
+
+Such a project should keep importing `io.quarkus:quarkus-bom` in its own
+`<dependencyManagement>`, in the position its resolution requires, written against the
+inherited property:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-bom</artifactId>
+    <version>${version.quarkus}</version> <!-- inherited, never declared locally -->
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+----
+
+That re-declaration is inert with respect to drift — the same coordinate resolved from the
+same inherited property — and it preserves an import order the project chose deliberately.
+Projects with no competing BOMs need declare nothing.
+
+=== Overriding the platform version
+
+A consumer may override `<version.quarkus>` in its own `<properties>` for an emergency pin —
+a child property beats an inherited one, and because both the plugin and the BOM read the
+same property they move together. This is *supported*: it keeps the coupling to the cuioss
+release cadence soft, so a project needing a Quarkus patch before the next cui-parent-pom
+release is never blocked. Drop the override once this parent has caught up.
+
+== JSF on Quarkus
+
+The JSF extensions (MyFaces, OmniFaces, PrimeFaces) are deliberately *not* part of this
+parent — non-JSF projects must not inherit them. They live in
+link:../../../java-ee-bom/java-ee-10-bom/quarkus-bom/README.adoc[de.cuioss:quarkus-bom],
+which is imported *alongside* this parent.
+
+== Verifying a migration
+
+[source,shell]
+----
+# quarkus-maven-plugin must resolve with no local <version>
+./mvnw help:effective-pom | grep -A3 quarkus-maven-plugin
+
+# the plugin version must equal the managed platform version
+./mvnw help:evaluate -Dexpression=version.quarkus -q -DforceStdout
+----
+
+Then run a real Quarkus build and confirm augmentation completes:
+
+[source,shell]
+----
+./mvnw clean install
+----
+
+This parent POM is part of the link:../README.adoc[cui-java-parent] module.
