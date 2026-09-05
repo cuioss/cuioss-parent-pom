@@ -142,15 +142,14 @@
                 <version>${version.junit.jupiter}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- The single Hamcrest artifact. This replaced hamcrest-core and hamcrest-library,
+                 which upstream deprecated - their POMs read "deprecated, please use hamcrest
+                 instead" - and which now ship as empty shims depending only on this one.
+                 Managing those two instead of this one meant this BOM pinned the two coordinates
+                 nothing declares, while leaving the coordinate every consumer uses unmanaged. -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-                <version>${version.hamcrest}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-library</artifactId>
+                <artifactId>hamcrest</artifactId>
                 <version>${version.hamcrest}</version>
                 <scope>test</scope>
             </dependency>
