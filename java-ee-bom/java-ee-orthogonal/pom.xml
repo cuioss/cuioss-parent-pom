@@ -10,7 +10,7 @@
     <name>java-ee-orthogonal</name>
     <description>Libraries that are used in the jakarta-ee-context but are agnostic to the actual version</description>
     <properties>
-        <version.slf4j>2.0.18</version.slf4j>
+        <version.slf4j>2.0.19</version.slf4j>
         <version.owasp.sanitizer>20260313.1</version.owasp.sanitizer>
         <version.prettytime>5.0.9.Final</version.prettytime>
         <version.jandex>3.6.0</version.jandex>
