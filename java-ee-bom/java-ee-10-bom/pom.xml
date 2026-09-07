@@ -15,7 +15,7 @@
     <properties>
         <version.myfaces>4.1.3</version.myfaces>
         <version.omnifaces>5.5.2</version.omnifaces>
-        <version.primefaces>15.0.17</version.primefaces>
+        <version.primefaces>15.0.18</version.primefaces>
         <version.cui.test.jsf.basic>4.3.0</version.cui.test.jsf.basic>
 
         <!-- Java EE-->
