@@ -39,7 +39,7 @@ toc::[]
 <parent>
    <groupId>de.cuioss</groupId>
    <artifactId>cui-parent-pom</artifactId>
-   <version>1.7.2</version> <!-- use the latest release -->
+   <version>1.7.3</version> <!-- use the latest release -->
 </parent>
 ----
 
@@ -73,7 +73,7 @@ value and cannot drift apart.
 <parent>
     <groupId>de.cuioss</groupId>
     <artifactId>cui-quarkus-parent</artifactId>
-    <version>1.7.2</version> <!-- use the latest release -->
+    <version>1.7.3</version> <!-- use the latest release -->
 </parent>
 
 <build>
@@ -99,7 +99,7 @@ projects that carry competing BOM imports, and for the supported emergency-pin o
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>cui-java-parent</artifactId>
-        <version>1.7.2</version>
+        <version>1.7.3</version>
     </parent>
     <artifactId>cui-java-sample</artifactId>
     <name>cui java sample</name>
