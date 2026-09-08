@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.cuioss</groupId>
         <artifactId>cui-java-parent</artifactId>
-        <version>1.7.3</version>
+        <version>1.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>cui-quarkus-parent</artifactId>

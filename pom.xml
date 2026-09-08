@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.cuioss</groupId>
     <artifactId>cui-parent-pom</artifactId>
-    <version>1.7.3</version>
+    <version>1.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>cui parent pom</name>
     <description>Parent pom for all cui-oss projects. It defines the sonatype
@@ -65,7 +65,7 @@
         <url>https://github.com/cuioss/cui-parent-pom/</url>
         <connection>scm:git:https://github.com/cuioss/cui-parent-pom.git</connection>
         <developerConnection>scm:git:https://github.com/cuioss/cui-parent-pom/</developerConnection>
-        <tag>1.7.3</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <url>https://github.com/cuioss/cui-parent-pom/issues</url>
@@ -152,7 +152,7 @@
         <rewrite-testing-frameworks.version>3.44.0</rewrite-testing-frameworks.version>
         <rewrite-migrate-java.version>3.42.1</rewrite-migrate-java.version>
         <rewrite-static-analysis.version>2.41.1</rewrite-static-analysis.version>
-        <project.build.outputTimestamp>2026-09-08T14:57:53Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-09-08T14:58:02Z</project.build.outputTimestamp>
         <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
 
         <cui-open-rewrite.version>1.4.1</cui-open-rewrite.version>
