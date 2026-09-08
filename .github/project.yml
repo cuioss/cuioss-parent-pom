@@ -2,7 +2,7 @@ name: cui parent pom
 description: Parent pom for all CUI-OSS projects
 
 release:
-  current-version: 1.7.2
+  current-version: 1.7.3
   next-version: 1.7-SNAPSHOT
   create-github-release: true
 
@@ -26,6 +26,11 @@ github-automation:
   auto-merge-build-versions: true
   auto-merge-build-timeout: 300
 
+# A ":<artifactId>" suffix names the parent this consumer actually inherits, for one on a
+# different parent of the same reactor. The matcher is an exact artifactId match, so without
+# the suffix these three are silently skipped on every release - reported as "no changes
+# needed", indistinguishable from already-current. That is how cui-reference-documentation
+# ended up two releases behind.
 consumers:
   - cui-core-ui-model
   - cui-http
@@ -36,14 +41,14 @@ consumers:
   - cui-open-rewrite
   - cui-portal-core
   - cui-portal-ui
-  - cui-reference-documentation
+  - cui-reference-documentation:cui-quarkus-parent
   - cui-test-generator
   - cui-test-juli-logger
   - cui-test-keycloak-integration
   - cui-test-mockwebserver-junit5
   - cui-test-value-objects
-  - TokenSheriff
-  - API-Sheriff
+  - TokenSheriff:cui-quarkus-parent
+  - API-Sheriff:cui-quarkus-parent
 
 dependency-propagation:
   group-id: de.cuioss

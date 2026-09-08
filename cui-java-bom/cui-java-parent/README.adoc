@@ -11,7 +11,7 @@ To use this parent POM in your project, add it to your pom.xml:
 <parent>
     <groupId>de.cuioss</groupId>
     <artifactId>cui-java-parent</artifactId>
-    <version>1.7.2</version> <!-- use the latest release -->
+    <version>1.7.3</version> <!-- use the latest release -->
 </parent>
 ----
 
