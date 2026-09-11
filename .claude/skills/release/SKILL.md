@@ -197,17 +197,41 @@ CANARY=~/git/cui-reference-documentation
 RC=<version>-RC                      # e.g. 1.5.8-RC
 DEV=$(./mvnw -q -N help:evaluate -Dexpression=project.version -DforceStdout)   # e.g. 1.5-SNAPSHOT
 
-./mvnw -B -q versions:set -DnewVersion="$RC" -DprocessAllModules=true -DgenerateBackupPoms=false
-./mvnw -B -q -N install
-for m in cui-java-bom java-ee-bom java-ee-bom/java-ee-10-bom \
-         java-ee-bom/java-ee-10-bom/quarkus-bom java-ee-bom/java-ee-orthogonal \
-         cui-java-bom/cui-java-parent; do
-  ./mvnw -B -q -N -f "$m/pom.xml" install
-done
+# Every reactor artifactId, derived from the POMs rather than listed by hand.
+MODULES=($(for p in $(git ls-files '*pom.xml'); do
+  sed '/<parent>/,/<\/parent>/d' "$p" | grep -m1 -o '<artifactId>[^<]*' | cut -d'>' -f2
+done))
+VSET=(-B -q versions:set -DprocessAllModules=true -DgenerateBackupPoms=false
+      -DupdateBuildOutputTimestampPolicy=never)
 
-# point the canary's parent AND version.cui.parent at "$RC", then:
-(cd "$CANARY" && ./mvnw -B clean verify)      # must be BUILD SUCCESS
+./mvnw "${VSET[@]}" -DnewVersion="$RC"
+./mvnw -B -q install                 # the whole reactor, however many modules it has
+
+# Point the canary's <parent> version at "$RC" (it inherits cui-quarkus-parent), then:
+(cd "$CANARY" && ./mvnw -B clean verify -Dversion.cui.parent="$RC")   # must be BUILD SUCCESS
 ```
+
+Three details in there are load-bearing — each replaces a step that went wrong in practice:
+
+- **`-Dversion.cui.parent="$RC"` is not optional.** The canary *inherits* `version.cui.parent`
+  rather than declaring it, and imports `java-ee-10-bom`, `quarkus-bom` and
+  `java-ee-orthogonal` with it. Editing only `<parent>` leaves it at the last *released*
+  value, so the canary imports the released BOMs — the ones carrying the smallrye pin —
+  instead of the candidate, and passes while testing the wrong thing. Confirm with
+  `./mvnw -q -N help:evaluate -Dexpression=version.cui.parent -DforceStdout` in the canary:
+  without the flag it prints the previous release.
+- **The module list is derived, not typed.** A hand-kept list drifted twice: it omitted
+  `cui-quarkus-parent` (the canary's actual parent — the build could not resolve it), and it
+  named the root `cuioss-parent-pom` when its artifactId is `cui-parent-pom`, so the purge
+  never removed the root candidate. The repo name is not the artifactId.
+- **`-DupdateBuildOutputTimestampPolicy=never`.** `versions:set` otherwise rewrites
+  `project.build.outputTimestamp` to *now* on every run, which setting the version back
+  cannot undo — the tree stays dirty and the clean-tree check below fails for a reason
+  that has nothing to do with the release.
+
+Arrays (`"${VSET[@]}"`) rather than plain variables, because zsh does not word-split an
+unquoted `$VAR`: `./mvnw $VSET` passes one argument there and Maven looks for a plugin
+named ` -q versions`. The array form behaves the same in bash and zsh.
 
 Afterwards restore the development version and purge the candidate — note the explicit
 `cd "$BOM_DIR"` and that `$DEV` was captured above rather than hard-coded, so this cannot
@@ -215,9 +239,8 @@ stamp the wrong version across every POM:
 
 ```bash
 cd "$BOM_DIR"
-./mvnw -B -q versions:set -DnewVersion="$DEV" -DprocessAllModules=true -DgenerateBackupPoms=false
-for a in cuioss-parent-pom cui-java-bom cui-java-parent java-ee-bom java-ee-10-bom \
-         quarkus-bom java-ee-orthogonal; do
+./mvnw "${VSET[@]}" -DnewVersion="$DEV"
+for a in "${MODULES[@]}"; do
   rm -rf "$HOME/.m2/repository/de/cuioss/$a/$RC"
 done
 git status --porcelain      # must be empty before continuing
