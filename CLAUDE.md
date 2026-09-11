@@ -103,6 +103,13 @@ cui-parent-pom (root)
   - `maven.yml` → `reusable-maven-build.yml` (build + Sonar + snapshot deploy; path filtering handled inside the reusable workflow)
   - `release.yml` → `reusable-maven-release.yml` (triggered by a merged `project.yml` change)
   - `dependency-review.yml`, `dependabot-auto-merge.yml`, `scorecards.yml` → their reusable counterparts
+- `quarkus-alignment.yml` is the exception: a repo-local workflow, not a thin caller. It runs
+  `.github/scripts/check-quarkus-alignment.py`, which asserts that
+  `version.microprofile.config.impl.smallrye` (java-ee-10-bom) equals the smallrye-config
+  release `io.quarkus:quarkus-bom:${version.quarkus}` manages — a coupling nothing in the
+  Maven build can see, because this repo resolves no dependencies. It runs on every PR and on
+  the merge queue, and `release.yml` calls it as a `needs:` guard so the release job cannot
+  start on a misaligned pair. The check fails closed: "cannot determine" blocks.
 - Automatic SNAPSHOT deployments on `main` commits.
 - Dependabot updates (maven + github-actions) with a tiered `cooldown`.
 - Supply-chain hardening via OpenSSF Scorecard; all actions pinned by commit SHA.

@@ -16,15 +16,24 @@ fails augmentation with
 The ``requireSameVersions`` enforcer guard cannot catch this: nothing is split, so it
 is correctly silent. Only this check does.
 
-Two shapes are supported, because consumers cannot inherit ``version.quarkus`` -- Maven
-does not propagate properties from *imported* BOMs, and ``quarkus-maven-plugin`` needs
-the value as a build extension. Every Quarkus consumer therefore declares it locally:
+Two shapes are supported:
 
-* **declared** -- read both versions from the POMs (the BOM repo itself, and consumers
-  that pin their own Quarkus).
+* **declared** -- read both versions from the effective POM. The pin may live in a reactor
+  POM (the BOM repo itself, and consumers that pin their own Quarkus) *or* be inherited
+  from a real ``<parent>`` such as ``cui-quarkus-parent``. Maven still does not propagate
+  properties from *imported* BOMs, and ``quarkus-maven-plugin`` needs the value as a build
+  extension, so an imported BOM alone can never supply it -- but a parent can.
 * **resolved** (``--check-resolved``) -- additionally run ``dependency:list`` and assert
   every ``io.smallrye.config`` artifact actually resolves to the expected version. This
   catches a split family as well as a wrong one, and is what a consumer repo wants.
+
+Where this runs
+---------------
+In *this* repo it is a CI gate, not a habit: ``.github/workflows/quarkus-alignment.yml``
+runs it on every pull request and on the merge queue, and ``.github/workflows/release.yml``
+runs it again as a ``needs:`` guard on the release job -- so a misaligned pair cannot be
+released even by a manual ``workflow_dispatch``. The release skill runs the same file
+by hand during its pre-release gate.
 
 Exit codes
 ----------
@@ -120,6 +129,56 @@ def find_property(repo: Path, name: str) -> tuple[str, Path]:
     return hits[0]
 
 
+def evaluate_property(repo: Path, name: str) -> str | None:
+    """Read a property from the *effective* POM, so inherited values are visible too.
+
+    Returns None when the property is not defined anywhere in the parent chain; Maven
+    prints a ``null object or invalid expression`` marker for that case rather than
+    failing, so an absent property must not be confused with a broken build.
+    """
+    mvnw = repo / "mvnw"
+    cmd = [str(mvnw) if mvnw.exists() else "mvn", "-B", "-q", "help:evaluate",
+           f"-Dexpression={name}", "-DforceStdout", "-N"]
+    try:
+        out = subprocess.run(cmd, cwd=repo, capture_output=True, text=True, timeout=900)
+    except Exception as exc:
+        raise Undetermined(f"help:evaluate {name} failed to run: {exc}") from exc
+    if out.returncode != 0:
+        raise Undetermined(f"help:evaluate {name} exited {out.returncode}:\n{out.stderr[-2000:]}")
+    lines = [ln.strip() for ln in out.stdout.splitlines() if ln.strip()]
+    if not lines:
+        return None
+    value = lines[-1]
+    return None if "null object or invalid expression" in value else value
+
+
+def resolve_property(repo: Path, name: str) -> tuple[str, str]:
+    """The property as the build actually sees it: declared here, or inherited.
+
+    Scanning reactor POM text alone reports an inherited pin as "not declared anywhere"
+    and exits 2. That is a release blocker by design -- but a gate that *cannot run* is
+    the one people wave through, which is precisely the outage it exists to prevent.
+    TokenSheriff hit this the moment it adopted ``cui-quarkus-parent`` and stopped
+    pinning ``version.quarkus`` itself, so the text scan gets an effective-POM fallback.
+
+    A genuine *conflict* between reactor declarations still fails: that is a real
+    inconsistency, not a missing value, and resolving it to one silent winner would hide
+    the very split this check hunts for.
+    """
+    try:
+        value, pom = find_property(repo, name)
+        return value, str(pom.relative_to(repo))
+    except Undetermined as exc:
+        if "not declared anywhere" not in str(exc):
+            raise
+        value = evaluate_property(repo, name)
+        if value is None:
+            raise Undetermined(
+                f"property {name} is neither declared under {repo} nor defined in the "
+                f"effective POM") from exc
+        return value, "inherited from the parent chain"
+
+
 def quarkus_smallrye_version(quarkus_version: str) -> str:
     """The smallrye-config release io.quarkus:quarkus-bom:<version> manages."""
     url = QUARKUS_BOM_URL.format(v=quarkus_version)
@@ -174,17 +233,17 @@ def main() -> int:
     repo: Path = args.repo.resolve()
 
     try:
-        quarkus, quarkus_pom = find_property(repo, QUARKUS_PROP)
+        quarkus, quarkus_src = resolve_property(repo, QUARKUS_PROP)
         expected = quarkus_smallrye_version(quarkus)
-        print(f"quarkus            {quarkus}   ({quarkus_pom.relative_to(repo)})")
+        print(f"quarkus            {quarkus}   ({quarkus_src})")
         print(f"quarkus expects    {SMALLRYE_GROUP} {expected}")
 
         problems: list[str] = []
 
         # The declared pin is only relevant where the repo actually pins one.
         try:
-            ours, ours_pom = find_property(repo, SMALLRYE_PROP)
-            print(f"declared           {ours}   ({ours_pom.relative_to(repo)})")
+            ours, ours_src = resolve_property(repo, SMALLRYE_PROP)
+            print(f"declared           {ours}   ({ours_src})")
             if ours != expected:
                 problems.append(f"declared {SMALLRYE_PROP}={ours}, Quarkus {quarkus} expects {expected}")
         except Undetermined as exc:
