@@ -1,0 +1,71 @@
+# Asserts that java-ee-10-bom's <version.microprofile.config.impl.smallrye> equals the
+# smallrye-config release io.quarkus:quarkus-bom:<version.quarkus> manages.
+#
+# Why a dedicated gate: the two values are hand-maintained in different modules and
+# nothing in the build couples them. This repo has no Java source and resolves no
+# dependencies, so `mvnw verify` is green for a wrong pair; the requireSameVersions
+# enforcer is correctly silent too, because nothing is split. A wrong pair only shows up
+# downstream, as `failed to access io.smallrye.config.ConfigMappingLoader...` during
+# Quarkus augmentation - and by then it has fanned out to every consumer. That has
+# shipped from here twice.
+#
+# Deliberately NOT path-filtered. It must report on *every* PR - including the
+# release-prep PR, which only touches .github/project.yml and README.adoc - because a
+# required check that is skipped never turns green and a check that does not run on the
+# release PR is not a release gate. It costs one HTTP fetch of a POM.
+#
+# No schedule: neither input can change without a commit (quarkus-bom:<v> is immutable
+# once published), so PR + merge queue + the release guard covers every transition.
+name: Quarkus Alignment
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+  # Called as a guard by release.yml, so the release job cannot start misaligned.
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Ref to check out. Empty means the ref that triggered the run.'
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: smallrye-config matches the Quarkus platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      # Only the effective-POM fallback needs Maven (both properties are declared in
+      # reactor POMs today). Installing a JDK anyway keeps "cannot determine" meaning a
+      # real alignment problem rather than a missing toolchain.
+      - name: Set up JDK
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # Exit 0 aligned, 1 misaligned, 2 could not determine. Only 0 passes: an
+      # unresolvable check (network failure, missing coordinate) is a blocker, never a
+      # pass - that is the whole point of gating on it.
+      - name: Check smallrye-config against the Quarkus platform
+        run: python3 .github/scripts/check-quarkus-alignment.py --repo .

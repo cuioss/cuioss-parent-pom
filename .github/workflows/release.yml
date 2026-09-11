@@ -12,10 +12,32 @@ permissions:
   contents: read
 
 jobs:
+  # Hard gate: the smallrye-config pin must match the Quarkus platform this release
+  # ships. Running it here rather than relying only on the PR check means a manual
+  # workflow_dispatch cannot route around it either. The check fails closed - "cannot
+  # determine" blocks - so an unreachable Maven Central stops the release instead of
+  # shipping an unverified pair to every consumer at once.
+  quarkus-alignment:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/quarkus-alignment.yml
+    with:
+      # The release runs off the default branch; the PR merge ref may already be gone
+      # by the time this fires on `pull_request: closed`.
+      ref: ${{ github.event.repository.default_branch }}
+
   release:
+    needs: quarkus-alignment
     permissions:
       contents: write
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    # The alignment result is asserted explicitly. A job-level `if:` REPLACES the
+    # implicit success() that `needs:` would otherwise add, so the original condition
+    # alone would let the release run on top of a failed guard - the gate would be
+    # decorative. 'skipped' (a closed-but-unmerged PR) must not pass either.
+    if: >-
+      needs.quarkus-alignment.result == 'success' &&
+      (github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch')
     uses: cuioss/cuioss-organization/.github/workflows/reusable-maven-release.yml@014db4eafdf4e9d32c74a1dd0a3f945c72437b00 # v0.25.1
     secrets:
       RELEASE_APP_ID: ${{ secrets.RELEASE_APP_ID }}

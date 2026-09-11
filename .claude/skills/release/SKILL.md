@@ -33,10 +33,12 @@ Central deploy, GitHub release creation, and — because `pages.deploy-at-releas
 documentation pages deploy.
 
 This is a **POM-and-BOM aggregator** — there is no Java source, no tests, and no
-integration/e2e suites. The only PR gating check is the **Maven Build** matrix (Java 21).
+integration/e2e suites. Two PR gating checks run: the **Maven Build** matrix (Java 21) and
+**Quarkus Alignment** (the smallrye-config/Quarkus pairing from Step 2b, run again by CI).
 
 Observed timings:
-- PR gating check (**Maven Build**): typically **~1–3 min** (validate + enforcer only, no tests).
+- PR gating checks (**Maven Build**, **Quarkus Alignment**): typically **~1–3 min** (validate
+  + enforcer only, no tests; the alignment check is one POM fetch).
 - Release workflow: **~5 min**, but Maven Central propagation, the GitHub release publish, and
   the pages deploy can lag → allow **up to ~30 min** before treating it as stuck.
 
@@ -125,15 +127,22 @@ from io.quarkus.deployment.configuration.ConfigMappingUtils
 The `requireSameVersions` enforcer guard does **not** catch this — nothing is split, so it is
 correctly silent. Only this check does.
 
-Run the script that ships with this skill. It **exits non-zero** on a mismatch, so it can
-gate a scripted release rather than only printing a warning:
+This is now also enforced by CI — `.github/workflows/quarkus-alignment.yml` runs the check
+on every PR and on the merge queue, and `.github/workflows/release.yml` runs it again as a
+`needs:` guard on the release job, so a misaligned pair cannot be released even by a manual
+`workflow_dispatch`. Run it here anyway: catching it before the release branch exists is
+cheaper than a red release PR, and the same script covers the consumer repos (below), which
+CI here cannot see.
+
+The script lives under `.github/scripts/` rather than with this skill, because CI owns it —
+the skill is one of its callers, not its home. It **exits non-zero** on a mismatch:
 
 ```bash
-python3 .claude/skills/release/check-quarkus-alignment.py --repo .
+python3 .github/scripts/check-quarkus-alignment.py --repo .
 ```
 
 ```
-quarkus            3.39.0   (java-ee-bom/java-ee-10-bom/quarkus-bom/pom.xml)
+quarkus            3.39.3   (cui-java-bom/cui-java-parent/cui-quarkus-parent/pom.xml)
 quarkus expects    io.smallrye.config 3.17.2
 declared           3.17.2   (java-ee-bom/java-ee-10-bom/pom.xml)
 
@@ -156,7 +165,8 @@ asserts every `io.smallrye.config` artifact actually resolves to the expected ve
 catches a *split* family as well as a wrong one:
 
 ```bash
-python3 check-quarkus-alignment.py --repo ~/git/cui-reference-documentation --check-resolved
+python3 .github/scripts/check-quarkus-alignment.py \
+  --repo ~/git/cui-reference-documentation --check-resolved
 ```
 
 Consumers cannot inherit `version.quarkus` — Maven does not propagate properties from
