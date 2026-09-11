@@ -50,7 +50,7 @@
              the cuioss release cadence soft, so a consumer needing a Quarkus patch before
              the next cui-parent-pom release is never blocked. Drop the override once the
              platform version here has caught up. -->
-        <version.quarkus>3.39.2</version.quarkus>
+        <version.quarkus>3.39.3</version.quarkus>
     </properties>
 
     <dependencyManagement>
