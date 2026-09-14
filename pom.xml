@@ -126,7 +126,7 @@
         <!-- Plugin Configuration -->
         <!-- org.codehaus plugins -->
         <enforcer.extra.rules.version>1.12.1</enforcer.extra.rules.version>
-        <buildhelper.maven.plugin.version>3.6.1</buildhelper.maven.plugin.version>
+        <buildhelper.maven.plugin.version>3.6.2</buildhelper.maven.plugin.version>
         <buildnumber.maven.plugin.version>3.3.1</buildnumber.maven.plugin.version>
         <versions.maven.plugin.version>2.21.0</versions.maven.plugin.version>
         <exec.maven.plugin.version>3.6.4</exec.maven.plugin.version>
