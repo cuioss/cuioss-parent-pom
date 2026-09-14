@@ -125,7 +125,7 @@
         <maven.surefire_report.plugin.version>3.6.0</maven.surefire_report.plugin.version>
         <!-- Plugin Configuration -->
         <!-- org.codehaus plugins -->
-        <enforcer.extra.rules.version>1.12.0</enforcer.extra.rules.version>
+        <enforcer.extra.rules.version>1.12.1</enforcer.extra.rules.version>
         <buildhelper.maven.plugin.version>3.6.1</buildhelper.maven.plugin.version>
         <buildnumber.maven.plugin.version>3.3.0</buildnumber.maven.plugin.version>
         <versions.maven.plugin.version>2.21.0</versions.maven.plugin.version>
