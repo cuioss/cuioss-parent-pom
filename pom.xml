@@ -129,7 +129,7 @@
         <buildhelper.maven.plugin.version>3.6.1</buildhelper.maven.plugin.version>
         <buildnumber.maven.plugin.version>3.3.0</buildnumber.maven.plugin.version>
         <versions.maven.plugin.version>2.21.0</versions.maven.plugin.version>
-        <exec.maven.plugin.version>3.6.3</exec.maven.plugin.version>
+        <exec.maven.plugin.version>3.6.4</exec.maven.plugin.version>
         <!-- jandex plugin -->
         <jandex.smallrye.maven.plugin.version>3.6.0</jandex.smallrye.maven.plugin.version>
         <!-- Maven compiler Plugin -->
