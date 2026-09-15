@@ -128,7 +128,7 @@
         <enforcer.extra.rules.version>1.12.1</enforcer.extra.rules.version>
         <buildhelper.maven.plugin.version>3.6.2</buildhelper.maven.plugin.version>
         <buildnumber.maven.plugin.version>3.3.1</buildnumber.maven.plugin.version>
-        <versions.maven.plugin.version>2.21.0</versions.maven.plugin.version>
+        <versions.maven.plugin.version>2.22.0</versions.maven.plugin.version>
         <exec.maven.plugin.version>3.6.4</exec.maven.plugin.version>
         <!-- jandex plugin -->
         <jandex.smallrye.maven.plugin.version>3.6.0</jandex.smallrye.maven.plugin.version>
