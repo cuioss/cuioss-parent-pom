@@ -40,7 +40,7 @@
         <version.microprofile.health.impl.smallrye>4.3.0</version.microprofile.health.impl.smallrye>
         <version.microprofile.metrics>5.1.2</version.microprofile.metrics>
         <version.microprofile.metrics.impl.smallrye>5.1.0</version.microprofile.metrics.impl.smallrye>
-        <version.microprofile.config>3.1.1</version.microprofile.config>
+        <version.microprofile.config>3.1.2</version.microprofile.config>
         <!-- Must equal the smallrye-config release io.quarkus:quarkus-bom manages for
              the current version.quarkus (declared in cui-quarkus-parent). quarkus-bom
              has this module as its *parent*, so the io.smallrye.config:* entries below
