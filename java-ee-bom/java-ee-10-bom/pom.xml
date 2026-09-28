@@ -58,7 +58,7 @@
         <version.microprofile.config.impl.smallrye>3.17.2</version.microprofile.config.impl.smallrye>
         <version.microprofile.rest-client>4.0</version.microprofile.rest-client>
         <version.microprofile.context-propagation>1.3</version.microprofile.context-propagation>
-        <version.microprofile.context-propagation.impl.smallrye>2.3.0</version.microprofile.context-propagation.impl.smallrye>
+        <version.microprofile.context-propagation.impl.smallrye>2.4.0</version.microprofile.context-propagation.impl.smallrye>
         <version.org.jboss.resteasy.client>7.0.0.Final</version.org.jboss.resteasy.client>
         <version.org.jboss.resteasy.microprofile>3.0.1.Final</version.org.jboss.resteasy.microprofile>
         <version.jboss-logging>3.6.3.Final</version.jboss-logging>
