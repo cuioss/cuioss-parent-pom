@@ -36,7 +36,7 @@
         <version.jdom2>2.0.6.1</version.jdom2>
         <version.awaitility>4.3.0</version.awaitility>
         <version.jspecify>1.0.1</version.jspecify>
-        <version.archunit>1.5.0</version.archunit>
+        <version.archunit>1.5.1</version.archunit>
         <version.jmh>1.37</version.jmh>
     </properties>
 
