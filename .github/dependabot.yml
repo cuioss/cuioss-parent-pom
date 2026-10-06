@@ -26,6 +26,12 @@ updates:
   # is resolved.
   - dependency-name: "org.apache.maven:apache-maven"
     versions: [">= 3.10.0"]
+  # java-ee-10-bom targets Jakarta EE 10 (forward-adopting CDI 4.1 from EE 11) and
+  # pairs the API with Weld 5.x, which implements CDI 4.x. CDI 5 is post-EE 11 and
+  # must move together with its implementations and Quarkus, not as a lone API
+  # bump (see #1481). Minor/patch updates within 4.x stay enabled.
+  - dependency-name: "jakarta.enterprise:jakarta.enterprise.cdi-api"
+    update-types: ["version-update:semver-major"]
 
 - package-ecosystem: github-actions
   directory: "/"
