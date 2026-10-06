@@ -20,6 +20,12 @@ updates:
   # requireSameVersions guard cannot catch it, because nothing is split.
   # Bump this together with version.quarkus, never on its own.
   - dependency-name: "io.smallrye.config:*"
+  # Maven 3.10.0 produces a Central bundle that the Central Portal rejects for modules
+  # excluded from publishing (it failed the cui-http 3.2 release, cuioss/cui-http#270). Stay on
+  # 3.9.x until https://github.com/mavenplugins/central-publishing-maven-plugin/issues/78
+  # is resolved.
+  - dependency-name: "org.apache.maven:apache-maven"
+    versions: [">= 3.10.0"]
 
 - package-ecosystem: github-actions
   directory: "/"
