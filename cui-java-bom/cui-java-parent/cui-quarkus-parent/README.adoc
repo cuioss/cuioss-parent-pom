@@ -27,7 +27,7 @@ expressed.
 <parent>
     <groupId>de.cuioss</groupId>
     <artifactId>cui-quarkus-parent</artifactId>
-    <version>1.7.6</version> <!-- use the latest release -->
+    <version>1.7.7</version> <!-- use the latest release -->
 </parent>
 ----
 
