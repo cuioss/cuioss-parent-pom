@@ -31,6 +31,10 @@ github-automation:
 # the suffix these three are silently skipped on every release - reported as "no changes
 # needed", indistinguishable from already-current. That is how cui-reference-documentation
 # ended up two releases behind.
+# An "<owner>/" prefix names a consumer in another organisation (a bare repo is a cuioss
+# repository). Propagation to such a consumer uses that organisation's own release App, whose
+# credentials live in cuioss as RELEASE_APP_ID_<OWNER> / RELEASE_APP_PRIVATE_KEY_<OWNER>
+# and must be passed through the release workflow's secrets block.
 consumers:
   - cui-core-ui-model
   - cui-http
@@ -49,7 +53,7 @@ consumers:
   - cui-test-value-objects
   - TokenSheriff:cui-quarkus-parent
   - API-Sheriff:cui-quarkus-parent
-  - plan-marshall-mcp:cui-quarkus-parent
+  - plan-marshall/plan-marshall-mcp:cui-quarkus-parent
 
 dependency-propagation:
   group-id: de.cuioss
