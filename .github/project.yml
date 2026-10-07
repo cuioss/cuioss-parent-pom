@@ -49,7 +49,6 @@ consumers:
   - cui-test-value-objects
   - TokenSheriff:cui-quarkus-parent
   - API-Sheriff:cui-quarkus-parent
-  - plan-marshall-mcp:cui-quarkus-parent
 
 dependency-propagation:
   group-id: de.cuioss
