@@ -92,8 +92,9 @@
           "review_rate_window_await": false,
           "review_rate_window_timeout_seconds": 3600,
           "lane": "off",
-          "required_bots": "",
-          "optional_bots": ""
+          "required_bots": "cuioss-review-bot,coderabbit",
+          "optional_bots": "sourcery",
+          "bot_lists_provenance": "answered"
         },
         "default:branch-cleanup": {
           "pr_merge_strategy": "squash",
