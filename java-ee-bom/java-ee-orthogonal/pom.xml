@@ -19,7 +19,7 @@
         <version.log4j>2.26.1</version.log4j>
         <version.smallrye-jwt>4.6.4</version.smallrye-jwt>
         <version.bouncycastle>1.86</version.bouncycastle>
-        <version.rest-assured>6.2.0</version.rest-assured>
+        <version.rest-assured>6.3.0</version.rest-assured>
         <version.cui.test.keycloak.integration>1.3.0</version.cui.test.keycloak.integration>
     </properties>
     <dependencyManagement>
