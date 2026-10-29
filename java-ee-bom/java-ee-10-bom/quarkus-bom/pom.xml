@@ -44,7 +44,7 @@
          ============================================================================ -->
 
     <properties>
-        <version.omnifaces.quarkus>5.5.5</version.omnifaces.quarkus>
+        <version.omnifaces.quarkus>5.5.6</version.omnifaces.quarkus>
         <version.primefaces.quarkus>4.16.1</version.primefaces.quarkus>
     </properties>
     <dependencyManagement>
