@@ -51,6 +51,7 @@ consumers:
   - cui-test-keycloak-integration
   - cui-test-mockwebserver-junit5
   - cui-test-value-objects
+  - git-document-repository
   - TokenSheriff:cui-quarkus-parent
   - API-Sheriff:cui-quarkus-parent
   - plan-marshall/pm-mcp-parent:cui-quarkus-parent
