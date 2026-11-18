@@ -8,6 +8,7 @@ release:
 
 maven-build:
   java-versions: '["21","27"]'
+  skip-on-docs-only: false  # TEMPORARY: verification commit, removed before merge
   java-version: '21'
   enable-snapshot-deploy: true
   maven-profiles-release: 'release-pom'
