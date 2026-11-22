@@ -1,12 +1,12 @@
 = Image Licensing and Usage Information
 :author: cuioss
-:revdate: 2025-06-27
-:revnumber: 1.0
+:revdate: 2026-11-22
+:revnumber: 1.1
 :doctype: book
 
 == Image Attribution and Licensing
 
-This project includes cartoon-style illustrations of a guinea pig character in various thematic outfits (e.g., cowboy, carpenter, detective). These images were created to serve as mascots or visual identifiers for sub-projects.
+This project includes cartoon-style illustrations of a bear character in various thematic outfits (e.g., cowboy, carpenter, detective, quality controller). The character started as a guinea pig and is now drawn as a bear. These images were created to serve as mascots or visual identifiers for sub-projects.
 
 === Image Source
 
